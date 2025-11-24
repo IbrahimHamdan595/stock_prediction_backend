@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/app
     environment:
-      - MONGO_URI=mongodb://mongo:27017
+      - MONGO_URI=mongodb+srv://Ibrahim_Hamdan_db:Ibr@him1912@cluster0.ayr8ym4.mongodb.net/
       - MONGO_DB_NAME=stock_signals
       - JWT_SECRET_KEY=devsecret
       - JWT_ALGORITHM=HS256

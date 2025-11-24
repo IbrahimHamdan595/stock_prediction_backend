@@ -10,6 +10,7 @@ class Token(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+    requires_2fa: bool = False
 
 
 class TokenPayload(BaseModel):
@@ -35,7 +36,38 @@ class UserRead(BaseModel):
     full_name: Optional[str] = None
     role: UserRole
     is_active: bool
+    two_factor_enabled: bool = False
     created_at: datetime
     updated_at: datetime
 
     model_config = {"populate_by_name": True}
+
+
+# 2FA schemas
+class Enable2FARequest(BaseModel):
+    email: EmailStr
+
+
+class Verify2FARequest(BaseModel):
+    email: EmailStr
+    code: str
+
+
+class Complete2FALogin(BaseModel):
+    email: EmailStr
+    code: str
+
+
+# Password reset schemas
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str = Field(min_length=6)
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=6)
