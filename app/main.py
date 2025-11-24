@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.routers import (
     analytics as analytics_router,
@@ -16,6 +17,15 @@ from app.db.mongo import lifespan
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Stock Prediction & Trading Signals API", version="1.0.0", lifespan=lifespan)
+
+    # Configure CORS
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.get_allowed_origins(),
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     app.include_router(auth_router.router, prefix="/api/v1/auth", tags=["auth"])
     app.include_router(users_router.router, prefix="/api/v1/users", tags=["users"])

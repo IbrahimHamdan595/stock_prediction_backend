@@ -1,7 +1,7 @@
 from functools import lru_cache
-from typing import List
+from typing import List, Union
 
-from pydantic import AnyUrl, Field
+from pydantic import AnyUrl, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,7 +23,11 @@ class Settings(BaseSettings):
     smtp_password: str = Field("", validation_alias="SMTP_PASSWORD")
     email_from: str = Field("noreply@stockpredict.com", validation_alias="EMAIL_FROM")
 
-    allowed_origins: List[str] = Field(default_factory=lambda: ["*"], validation_alias="ALLOWED_ORIGINS")
+    allowed_origins: str = Field(default="*", validation_alias="ALLOWED_ORIGINS")
+
+    def get_allowed_origins(self) -> List[str]:
+        """Parse allowed origins from string to list"""
+        return [origin.strip() for origin in self.allowed_origins.split(",")]
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 

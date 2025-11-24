@@ -12,7 +12,7 @@ db = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global client, db
-    client = AsyncIOMotorClient(settings.mongo_uri)
+    client = AsyncIOMotorClient(str(settings.mongo_uri))
     db = client[settings.mongo_db_name]
     yield
     client.close()
